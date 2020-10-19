@@ -31,7 +31,7 @@ public class RestfulAccessDeniedHandler implements ServerAccessDeniedHandler {
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         String body= JSONUtil.toJsonStr(CommonResult.forbidden(denied.getMessage()));
         DataBuffer buffer =  response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));
-        log.info("授权拒绝 ： RestfulAccessDeniedHandler -------------------------  " + buffer);
+        log.info("授权拒绝 ： RestfulAccessDeniedHandler -------------------------  未授权 " + buffer);
         return response.writeWith(Mono.just(buffer));
     }
 }

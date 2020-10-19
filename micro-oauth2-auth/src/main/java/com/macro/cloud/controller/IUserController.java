@@ -5,4 +5,5 @@ import com.macro.cloud.domain.UserDTO;
 
 public interface IUserController {
     CommonResult register(UserDTO user);
+    CommonResult queryUser(String userName);
 }

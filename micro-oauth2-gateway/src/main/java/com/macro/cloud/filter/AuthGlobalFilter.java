@@ -34,6 +34,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             //从token中解析用户信息并设置到Header中去
             String realToken = token.replace("Bearer ", "");// 去除前缀
             JWSObject jwsObject = JWSObject.parse(realToken);         //
+            LOGGER.info("全局过滤器 ： jwsObject ： --------------- " + jwsObject);
             String userStr = jwsObject.getPayload().toString();
             LOGGER.info("user:{}", userStr);
             ServerHttpRequest request = exchange.getRequest().mutate().header("user", userStr).build();

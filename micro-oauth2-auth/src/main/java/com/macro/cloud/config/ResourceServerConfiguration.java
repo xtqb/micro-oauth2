@@ -16,13 +16,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     public static final String ROLE_ADMIN = "ADMIN";
-    //访问客户端密钥
-    public static final String CLIENT_SECRET = "123456";
-    //访问客户端ID
-    public static final String CLIENT_ID = "client_1";
-    //鉴权模式
-    public static final String GRANT_TYPE[] = {"password", "refresh_token"};
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
         log.info("配置OAuth 资源配置");
@@ -31,11 +24,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 //请求权限配置
                 .authorizeRequests()
                 //下边的路径放行,不需要经过认证
-                .antMatchers("/user/*").permitAll()
+                .antMatchers("/user/**").permitAll()
                 //OPTIONS请求不需要鉴权
                 .antMatchers(HttpMethod.OPTIONS, "/user/**").permitAll()
                 //用户的增删改接口只允许管理员访问
                 .antMatchers(HttpMethod.POST, "/user/**").hasAnyAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/user/**").hasAnyAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.PUT, "/user/**").hasAnyAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.DELETE, "/user/**").hasAnyAuthority(ROLE_ADMIN);
                 //其余接口没有角色限制，但需要经过网关远程认证，只要携带token就可以放行

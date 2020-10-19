@@ -50,8 +50,8 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .secret(passwordEncoder.encode("123456"))
                 .scopes("all")
                 .authorizedGrantTypes("password", "refresh_token")
-                .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(86400);
+                .accessTokenValiditySeconds(3600)   // 当前token的有效时间
+                .refreshTokenValiditySeconds(86400); // 重置token，有效时间
     }
 
     // 用来配置授权

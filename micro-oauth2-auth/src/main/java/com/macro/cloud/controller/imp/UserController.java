@@ -5,10 +5,7 @@ import com.macro.cloud.controller.IUserController;
 import com.macro.cloud.domain.UserDTO;
 import com.macro.cloud.log.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用于用户注册信息
@@ -26,5 +23,13 @@ public class UserController implements IUserController {
         loggerUtils.info("用户信息： " + user);
         return CommonResult.success("注册成功！");
     }
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    @Override
+    public CommonResult queryUser(@RequestParam String userName) {
+        return CommonResult.success("张三");
+    }
+
+
+
 
 }
