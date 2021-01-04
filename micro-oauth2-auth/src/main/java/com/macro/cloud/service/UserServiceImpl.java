@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserDetailsService {
     // 这里可以把用户放在mysql 或者 redis中
     @PostConstruct
     public void initData() {
+        // 用户信息
         String password = passwordEncoder.encode("123456");
         userList = new ArrayList<>();
         userList.add(new UserDTO(1L, "macro", password, 1, CollUtil.toList("ADMIN")));

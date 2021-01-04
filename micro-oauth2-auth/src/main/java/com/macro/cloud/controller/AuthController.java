@@ -2,10 +2,8 @@ package com.macro.cloud.controller;
 
 import com.macro.cloud.api.CommonResult;
 import com.macro.cloud.domain.Oauth2TokenDto;
-import com.macro.cloud.domain.SecurityUser;
 import com.macro.cloud.log.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -36,8 +34,6 @@ public class AuthController {
      */
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     public CommonResult<Oauth2TokenDto> postAccessToken(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
-        loggerUtils.info("id : " + principal.getName() + "\n "
-                + "currentThread  : " + Thread.currentThread().getName());
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             loggerUtils.info("key : " + entry.getKey() + "  , value : " + entry.getValue());
         }

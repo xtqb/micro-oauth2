@@ -1,14 +1,3 @@
-server:
-  port: 9501
-spring:
-  profiles:
-    active: dev
-  application:
-    name: micro-oauth2-api
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848,localhost:8847,localhost:8849
 management:
   endpoints:
     web:

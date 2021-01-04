@@ -1,0 +1,15 @@
+server:
+  port: 9501 # 端口
+spring:
+  profiles:
+    active: dev
+  application:
+    name: micro-oauth2-api
+  cloud:
+    zookeeper:
+      discovery:
+        enabled: true # 如果不想使用 ZooKeeper 进行服务注册和发现，设置为 false 即可
+      connect-string: 192.168.1.174:2181,192.168.1.149:2181,192.168.1.152:2181
+      connection-timeout: 50000
+
+

@@ -17,4 +17,8 @@ import java.util.List;
 @ConfigurationProperties(prefix="secure.ignore")
 public class IgnoreUrlsConfig {
     private List<String> urls;
+
+    public List<String> getUrls() {
+        return urls;
+    }
 }

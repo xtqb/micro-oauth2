@@ -1,6 +1,7 @@
 package com.macro.cloud.config;
 
-import lombok.extern.slf4j.Slf4j;
+import com.macro.cloud.log.LoggerUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,14 +12,15 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 /**
  * @description 资源服务器
  */
-@Slf4j
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     public static final String ROLE_ADMIN = "ADMIN";
+    @Autowired
+    private LoggerUtils loggerUtils;
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        log.info("配置OAuth 资源配置");
+        loggerUtils.info("配置OAuth 资源配置");
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 //请求权限配置

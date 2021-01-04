@@ -2,7 +2,8 @@ package com.macro.cloud.component;
 
 import cn.hutool.json.JSONUtil;
 import com.macro.cloud.api.CommonResult;
-import lombok.extern.slf4j.Slf4j;
+import com.macro.cloud.log.LoggerUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,11 @@ import java.nio.charset.Charset;
  * 自定义返回结果：没有登录或token过期时
  * Created by macro on 2020/6/18.
  */
-@Slf4j
 @Component
 public class RestAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
+    @Autowired
+    private LoggerUtils loggerUtils;
+
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
         ServerHttpResponse response = exchange.getResponse();
@@ -30,7 +33,7 @@ public class RestAuthenticationEntryPoint implements ServerAuthenticationEntryPo
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         String body = JSONUtil.toJsonStr(CommonResult.unauthorized(e.getMessage()));
         DataBuffer buffer = response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));
-        log.info("授权获取失败： RestAuthenticationEntryPoint  -------------------------   " + buffer);
+        loggerUtils.info("授权获取失败： RestAuthenticationEntryPoint  -------------------------   " + buffer);
         return response.writeWith(Mono.just(buffer));
     }
 }

@@ -1,6 +1,7 @@
 package com.macro.cloud.config;
 
 import com.macro.cloud.component.JwtTokenEnhancer;
+import com.macro.cloud.log.LoggerUtils;
 import com.macro.cloud.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,6 @@ import java.util.List;
  * 认证服务器配置
  * Created by macro on 2020/6/19.
  */
-@Slf4j
 @AllArgsConstructor
 @Configuration
 @EnableAuthorizationServer
@@ -41,37 +41,40 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenEnhancer jwtTokenEnhancer;
+    @Autowired
+    private LoggerUtils loggerUtils;
 
-    @Override //定义客户端详细信息
+    @Override //资源拥有者详细信息
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        log.info("客户端详细信息-------------------------------------------------");
+        loggerUtils.info("资源拥有者详细信息-------------------------------------------------");
         clients.inMemory()
                 .withClient("client-app")
                 .secret(passwordEncoder.encode("123456"))
                 .scopes("all")
                 .authorizedGrantTypes("password", "refresh_token")
-                .accessTokenValiditySeconds(3600)   // 当前token的有效时间
-                .refreshTokenValiditySeconds(86400); // 重置token，有效时间
+                .accessTokenValiditySeconds(3600)   // 当前token的有效时间 单位s
+                .refreshTokenValiditySeconds(86400); // 重置token，有效时间 单位s
     }
 
     // 用来配置授权
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        log.info("配置授权-------------------------------------------------");
+        loggerUtils.info("配置授权-------------------------------------------------");
         TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> delegates = new ArrayList<>();
         delegates.add(jwtTokenEnhancer);
-        delegates.add(accessTokenConverter());
+        delegates.add(accessTokenConverter());//
         enhancerChain.setTokenEnhancers(delegates); //配置JWT的内容增强器
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService) //配置加载用户信息的服务
-                .accessTokenConverter(accessTokenConverter())
+                .accessTokenConverter(accessTokenConverter())  //token信息解析秘钥
                 .tokenEnhancer(enhancerChain);
     }
 
-    @Override // 用来配置令牌端点   验证用户  用此端点验证令牌,则必须将此添加到授权服务器的配置中：
+    @Override // 主要是让/oauth/token支持client_id以及client_secret作登录认证
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        log.info("端点验证令牌-------------------------------------------------");
+        loggerUtils.info("端点验证令牌-------------------------------------------------");
+        // //允许表单提交 该allowFormAuthenticationForClients()方法触发的添加，ClientCredentialsTokenEndpointFilter从而允许通过表单参数进行身份验证。
         security.allowFormAuthenticationForClients()
                 .tokenKeyAccess("isAuthenticated()")
                 .checkTokenAccess("permitAll()");

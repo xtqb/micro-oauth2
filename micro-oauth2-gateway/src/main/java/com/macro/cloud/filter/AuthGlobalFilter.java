@@ -28,6 +28,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         LOGGER.info("token ----------------------------------------  " + token + "  , path : " + exchange.getRequest().getPath());
         if (StrUtil.isEmpty(token)) {
+            // 如果没有token，则直接绕过权限认证
             return chain.filter(exchange);
         }
         try {
